@@ -1,57 +1,101 @@
-# 📚 Sistem Manajemen Persediaan Buku - Toko "a book"
+# a book – Sistem Informasi Persediaan Buku
 
-Sistem informasi berbasis web (Web Apps) yang dirancang khusus untuk mempermudah pengelolaan data master buku, pengelompokan kategori, manajemen supplier, serta pencatatan log harian mutasi stok (barang masuk dan keluar) secara real-time. Aplikasi ini menggunakan pendekatan arsitektur serverless modern dengan memanfaatkan *Supabase* sebagai basis data awan (Cloud Database).
+**a book** merupakan sistem informasi sederhana yang dibuat untuk membantu pengelolaan usaha toko buku, khususnya dalam pencatatan data buku, kategori, supplier, transaksi mutasi stok, serta informasi log persediaan barang.
 
----
+## 🔗 Tentang a book
 
-## 🏗️ Desain Database & Arsitektur ERD (4 Entitas)
-Sistem ini dirancang secara ramping dan efisien menggunakan struktur *4 Entitas Utama* yang saling terelasi:
-1. *kategori*: Mengelompokkan genre/jenis buku untuk kerapian manajemen stok.
-2. *buku*: Menyimpan data detail buku (Judul, ISBN, Pengarang, Penerbit, Harga Beli, Harga Jual) serta kuantitas sisa stok saat ini.
-3. *supplier*: Mencatat profile vendor atau pihak ketiga yang memasok buku ke gudang.
-4. *mutasi_stok*: Buku jurnal digital tunggal (log harian) yang mencatat kronologi perubahan stok barang masuk maupun keluar.
+**a book** merupakan platform manajemen persediaan toko buku yang menyediakan berbagai macam kategori buku mulai dari Fiksi, Sains & Teknologi, hingga Pengembangan Diri untuk membantu operasional gudang secara teratur.
 
----
+Produk buku yang masuk dipantau berdasarkan pencatatan nota supplier, jumlah stok fisik saat ini, serta harga beli dan harga jual agar nilai valuasi aset persediaan terpantau secara transparan.
 
-## 📂 Struktur Dokumen Proyek
+## 🎯 Tujuan Sistem
+
+Sistem ini dibuat untuk membantu pengelolaan data usaha secara lebih rapi dan praktis, meliputi:
+* Pengelolaan data buku
+* Pengelolaan data kategori
+* Pengelolaan data supplier
+* Pengelolaan stok barang (Masuk & Keluar)
+* Perhitungan otomatis sisa stok pasca-mutasi
+* Pencegahan stok minus (*error handling* transaksi)
+
+## 🛠️ Fitur
+
+### 📊 Dashboard
+Menampilkan ringkasan data:
+* Total Judul Buku
+* Total Unit Stok
+* Total Supplier
+
+### 📚 Data Buku
+Digunakan untuk mencatat:
+* ID Buku
+* Judul Buku
+* ISBN
+* Pengarang
+* Penerbit
+* Harga Beli
+* Harga Jual
+* Stok
+* Aksi (Tambah, Edit, Hapus)
+
+### 🏷️ Data Kategori
+Digunakan untuk menyimpan:
+* Nama Kategori
+
+### 🚚 Data Supplier
+Digunakan untuk menyimpan:
+* Nama Supplier
+* Kontak
+* Alamat
+
+### 🔄 Mutasi Stok
+Digunakan untuk mencatat:
+* Judul Buku
+* Jenis Mutasi (Stok Masuk / Stok Keluar)
+* Jumlah Barang
+* Keterangan / Alasan
+
+*Sistem juga secara otomatis mengubah jumlah stok barang setelah transaksi mutasi berhasil disimpan.*
+
+## 🧮 Unsur Akuntansi & Aturan Bisnis
+
+Sistem menggunakan beberapa perhitungan dasar dan logika validasi persediaan:
+
+**Stok Akhir Masuk:**
 ```text
-/sistem-persediaan-buku
-├── /database
-│   └── schema.sql        # Skema query tabel PostgreSQL & data dummy awal
-├── /backend
-│   └── app.js            # Modul konfigurasi global API Key Supabase Client
-└── /frontend
-    ├── index.html        # Layout antarmuka Single Page Application (SPA)
-    ├── style.css         # Desain responsive bertema warna merah marun premium
-    └── script.js         # Logika event klik navigasi & integrasi Supabase
+Stok Awal + Jumlah Barang Masuk
 ```
----
 
-## ⚡ Fitur Utama Aplikasi
-- *Dashboard Interaktif*: Menampilkan widget ringkasan total judul buku, total unit stok tersedia, dan jumlah supplier aktif secara dinamis.
-- *Single Page Application (SPA): Navigasi menu sidebar yang interaktif dan responsif tanpa perlu melakukan pemuatan ulang halaman (*reload).
-- *Manajemen Persediaan Otomatis*: Form mutasi stok harian yang simpel. Setiap input "Stok Masuk" akan otomatis menambah stok di tabel buku, dan input "Stok Keluar" akan otomatis mengurangi stok.
-- *Aturan Bisnis Aman*: Sistem secara otomatis menolak transaksi "Stok Keluar" jika jumlah barang yang dikeluarkan melebihi sisa stok fisik buku saat itu agar terhindar dari stok minus.
-- *Fitur Kelola Data Lengkap: Modul form pengisian data baru beserta fungsionalitas tombol **Edit* dan *Hapus* pada baris data buku.
+**Stok Akhir Keluar:**
+```text
+Stok Awal - Jumlah Barang Keluar
+```
 
----
+**Aturan Bisnis Batas Pengurangan Stok:**
+```text
+IF Jumlah Barang Keluar > Stok Saat Ini THEN Tampilkan "Transaksi Ditolak!"
+```
 
-## 🚀 Cara Menjalankan Aplikasi Secara Lokal
+## 💻 Teknologi
 
-Ikuti langkah mudah berikut untuk menjalankan aplikasi ini di komputer/laptop Anda:
+* HTML
+* CSS
+* JavaScript
+* Supabase (PostgreSQL)
+* Git
+* GitHub
+* Visual Studio Code
 
-### 1. Prasyarat Penginstalan
-Pastikan Anda telah menginstal editor kode *Visual Studio Code (VS Code)* di komputer Anda.
+## 📁 Struktur Project
 
-### 2. Setup Database (Supabase)
-1. Buat proyek baru di dashboard [Supabase](https://supabase.com).
-2. Masuk ke menu *SQL Editor*, buat query baru, lalu salin dan jalankan seluruh perintah dari file /database/schema.sql.
-3. Buka menu *Project Settings* -> *API, lalu salin nilai *Project URL dan anon public API Key milik Anda.
-4. Buka file /backend/app.js di editor Anda, lalu masukkan kedua nilai tersebut pada konfigurasi window.SUPABASE_CONFIG.
-
-### 3. Menjalankan Aplikasi via Live Server
-1. Buka folder proyek ini menggunakan aplikasi VS Code.
-2. Masuk ke menu *Extensions* (Ctrl + Shift + X), cari ekstensi bernama *"Live Server"* (oleh Ritwick Dey), kemudian klik *Install*.
-3. Buka file /frontend/index.html di dalam VS Code.
-4. Klik kanan di area editor file index.html tersebut, lalu pilih opsi *"Open with Live Server"* (atau klik tombol *"Go Live"* di pojok kanan bawah status bar VS Code).
-5. Browser utama Anda akan otomatis terbuka dan mengarah ke alamat lokal http://127.0.0. Aplikasi siap digunakan!
+```text
+sistem-persediaan-buku/
+├── database/
+│   └── schema.sql
+├── backend/
+│   └── app.js
+└── frontend/
+    ├── index.html
+    ├── style.css
+    └── script.js
+```
