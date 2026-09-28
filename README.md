@@ -14,7 +14,7 @@ Sistem ini dirancang secara ramping dan efisien menggunakan struktur *4 Entitas 
 ---
 
 ## 📂 Struktur Dokumen Proyek
-text
+```text
 /sistem-persediaan-buku
 ├── /database
 │   └── schema.sql        # Skema query tabel PostgreSQL & data dummy awal
@@ -24,7 +24,7 @@ text
     ├── index.html        # Layout antarmuka Single Page Application (SPA)
     ├── style.css         # Desain responsive bertema warna merah marun premium
     └── script.js         # Logika event klik navigasi & integrasi Supabase
-
+```
 ---
 
 ## ⚡ Fitur Utama Aplikasi
