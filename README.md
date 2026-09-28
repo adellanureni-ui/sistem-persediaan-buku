@@ -25,7 +25,6 @@ text
     ├── style.css         # Desain responsive bertema warna merah marun premium
     └── script.js         # Logika event klik navigasi & integrasi Supabase
 
-
 ---
 
 ## ⚡ Fitur Utama Aplikasi
