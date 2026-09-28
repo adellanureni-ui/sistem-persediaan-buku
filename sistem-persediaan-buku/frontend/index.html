@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Persediaan Buku</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">a</div>
+          <div>
+            <p class="eyebrow">Inventory</p>
+            <h2>a book</h2>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a id="menu-dashboard" class="nav-item active" href="#" data-page="dashboard">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="layout-dashboard"></i></span>
+            <span>Dashboard</span>
+          </a>
+          <a id="menu-buku" class="nav-item" href="#" data-page="buku">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="book-open"></i></span>
+            <span>Buku</span>
+          </a>
+          <a id="menu-kategori" class="nav-item" href="#" data-page="kategori">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="tag"></i></span>
+            <span>Kategori</span>
+          </a>
+          <a id="menu-supplier" class="nav-item" href="#" data-page="supplier">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="truck"></i></span>
+            <span>Supplier</span>
+          </a>
+          <a id="menu-mutasi" class="nav-item" href="#" data-page="mutasi">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="arrow-left-right"></i></span>
+            <span>Mutasi Stok</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div id="page-dashboard" class="page">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow">Ringkasan</p>
+              <h1>Dashboard Persediaan</h1>
+            </div>
+            <button id="btnTambahBuku" class="primary-btn" type="button">+ Tambah Buku</button>
+          </header>
+
+          <div id="statusMessage" class="status-message hidden"></div>
+
+          <section class="stats-grid">
+            <article class="stat-card accent-blue">
+              <div>
+                <span>Total Buku</span>
+                <strong id="totalBooks">0</strong>
+              </div>
+              <span class="stat-icon stat-icon-book" aria-hidden="true"><i data-lucide="book-open"></i></span>
+            </article>
+
+            <article class="stat-card accent-green">
+              <div>
+                <span>Stok Keseluruhan</span>
+                <strong id="totalStock">0</strong>
+              </div>
+              <span class="stat-icon stat-icon-package" aria-hidden="true"><i data-lucide="package"></i></span>
+            </article>
+
+            <article class="stat-card accent-gold">
+              <div>
+                <span>Nilai Persediaan</span>
+                <strong id="totalValue">Rp 0</strong>
+              </div>
+              <span class="stat-icon stat-icon-value" aria-hidden="true"><i data-lucide="badge-dollar-sign"></i></span>
+            </article>
+
+            <article class="stat-card accent-purple">
+              <div>
+                <span>Mutasi Terakhir</span>
+                <strong id="lastMutation">0</strong>
+              </div>
+              <span class="stat-icon stat-icon-pen" aria-hidden="true"><i data-lucide="pen-tool"></i></span>
+            </article>
+          </section>
+
+          <section class="panel">
+            <div class="section-header">
+              <h3>Daftar Buku</h3>
+              <span>Data stok terkini</span>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Judul Buku</th>
+                    <th>Kategori</th>
+                    <th>Supplier</th>
+                    <th>Harga</th>
+                    <th>Stok</th>
+                  </tr>
+                </thead>
+                <tbody id="bookTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="bottom-grid">
+            <section class="panel">
+              <div class="section-header">
+                <h3>Mutasi Stok</h3>
+                <span>5 data terakhir</span>
+              </div>
+              <ul id="mutationList" class="list"></ul>
+            </section>
+
+            <section class="panel">
+              <div class="section-header">
+                <h3>Supplier Aktif</h3>
+                <span>Daftar pemasok</span>
+              </div>
+              <ul id="supplierList" class="list supplier-list"></ul>
+            </section>
+          </div>
+        </div>
+
+        <div id="page-buku" class="page" style="display: none;">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow">Master data</p>
+              <h1>Kelola Buku</h1>
+            </div>
+          </header>
+
+          <section class="panel">
+            <div class="section-header">
+              <h3>Tambah Buku Baru</h3>
+              <span>Masukkan data buku baru</span>
+            </div>
+
+            <form id="form-buku-baru" class="book-form">
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="judul-buku">Judul Buku</label>
+                  <input id="judul-buku" name="title" type="text" placeholder="Masukkan judul buku" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="isbn-buku">ISBN</label>
+                  <input id="isbn-buku" name="isbn" type="text" placeholder="Contoh: 9786021234567" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="pengarang-buku">Pengarang</label>
+                  <input id="pengarang-buku" name="author" type="text" placeholder="Nama pengarang" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="penerbit-buku">Penerbit</label>
+                  <input id="penerbit-buku" name="publisher" type="text" placeholder="Nama penerbit" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="harga-beli-buku">Harga Beli</label>
+                  <input id="harga-beli-buku" name="purchase_price" type="number" min="0" step="1000" placeholder="0" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="harga-jual-buku">Harga Jual</label>
+                  <input id="harga-jual-buku" name="price" type="number" min="0" step="1000" placeholder="0" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="stok-awal-buku">Stok Awal</label>
+                  <input id="stok-awal-buku" name="stock_quantity" type="number" min="0" step="1" placeholder="0" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="kategori-buku">Pilihan Kategori</label>
+                  <select id="kategori-buku" name="category_id" required>
+                    <option value="">Pilih kategori</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Simpan Buku Baru</button>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <div id="page-kategori" class="page" style="display: none;">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow">Master data</p>
+              <h1>Kategori Buku</h1>
+            </div>
+          </header>
+
+          <section class="panel">
+            <div class="section-header">
+              <h3>Tambah Kategori</h3>
+              <span>Masukkan kategori baru</span>
+            </div>
+
+            <form id="form-kategori" class="book-form">
+              <div class="form-grid single-col">
+                <div class="form-field">
+                  <label for="nama-kategori">Nama Kategori</label>
+                  <input id="nama-kategori" name="name" type="text" placeholder="Contoh: Novel, Pendidikan, Komik" required />
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Simpan Kategori</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel" style="margin-top: 24px;">
+            <div class="section-header">
+              <h3>Daftar Kategori</h3>
+              <span>Semua kategori buku</span>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nama Kategori</th>
+                  </tr>
+                </thead>
+                <tbody id="categoryTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div id="page-supplier" class="page" style="display: none;">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow">Master data</p>
+              <h1>Supplier</h1>
+            </div>
+          </header>
+
+          <section class="panel">
+            <div class="section-header">
+              <h3>Tambah Supplier</h3>
+              <span>Masukkan data pemasok baru</span>
+            </div>
+
+            <form id="form-supplier" class="book-form">
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="nama-supplier">Nama Supplier</label>
+                  <input id="nama-supplier" name="name" type="text" placeholder="Nama supplier" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="kontak-supplier">Kontak</label>
+                  <input id="kontak-supplier" name="contact_person" type="text" placeholder="Nama kontak / PIC" required />
+                </div>
+
+                <div class="form-field" style="grid-column: 1 / -1;">
+                  <label for="alamat-supplier">Alamat</label>
+                  <input id="alamat-supplier" name="address" type="text" placeholder="Alamat supplier" required />
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Simpan Supplier</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel" style="margin-top: 24px;">
+            <div class="section-header">
+              <h3>Daftar Supplier</h3>
+              <span>Informasi pemasok</span>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nama Supplier</th>
+                    <th>Kontak</th>
+                    <th>Alamat</th>
+                  </tr>
+                </thead>
+                <tbody id="supplierTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div id="page-mutasi" class="page" style="display: none;">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow">Log stok</p>
+              <h1>Mutasi Stok</h1>
+            </div>
+          </header>
+
+          <section class="mutation-layout">
+            <div class="panel">
+              <div class="section-header">
+                <h3>Jurnal Riwayat Mutasi Stok</h3>
+                <span>Log detail buku masuk dan keluar</span>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Judul Buku</th>
+                      <th>Jenis</th>
+                      <th>Qty</th>
+                      <th>Alasan</th>
+                      <th>Referensi</th>
+                      <th>Tanggal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mutationTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <aside class="side-summary transaction-card">
+              <h3>Transaksi Mutasi</h3>
+
+              <form id="form-mutasi-stok" class="book-form minimal-transaction-form">
+                <div class="form-grid single-col">
+                  <div class="form-field">
+                    <label for="select-buku-mutasi">Judul Buku</label>
+                    <select id="select-buku-mutasi" name="book_id" required>
+                      <option value="">-- Pilih Buku --</option>
+                    </select>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="select-jenis-mutasi">Jenis Mutasi</label>
+                    <select id="select-jenis-mutasi" name="mutation_type" required>
+                      <option value="IN">Stok Masuk</option>
+                      <option value="OUT">Stok Keluar</option>
+                    </select>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="input-jumlah-mutasi">Jumlah</label>
+                    <input id="input-jumlah-mutasi" name="quantity" type="number" min="1" value="1" required />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="input-keterangan-mutasi">Alasan / Keterangan</label>
+                    <input id="input-keterangan-mutasi" name="reason" type="text" placeholder="Contoh: Restock supplier" required />
+                  </div>
+                </div>
+
+                <button id="btn-simpan-mutasi" type="submit" class="primary-btn">Simpan Transaksi</button>
+              </form>
+            </aside>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="modal-edit-buku" class="modal-backdrop" style="display: none;">
+      <div class="modal-panel" style="max-width: 700px; width: min(92vw, 700px); background: #fff; border-radius: 18px; padding: 24px; box-shadow: 0 24px 80px rgba(15, 23, 42, 0.25); position: relative;">
+        <div class="section-header" style="margin-bottom: 20px;">
+          <h3 style="margin: 0;">Edit Buku</h3>
+          <button type="button" data-close-modal="edit" aria-label="Tutup" style="border: none; background: transparent; font-size: 28px; line-height: 1; cursor: pointer; color: #475569;">×</button>
+        </div>
+
+        <form id="form-edit-buku" class="book-form">
+          <input type="hidden" id="edit-book-id" name="id" />
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="edit-judul-buku">Judul Buku</label>
+              <input id="edit-judul-buku" name="title" type="text" placeholder="Judul buku" required />
+            </div>
+
+            <div class="form-field">
+              <label for="edit-isbn-buku">ISBN</label>
+              <input id="edit-isbn-buku" name="isbn" type="text" placeholder="ISBN" required />
+            </div>
+
+            <div class="form-field">
+              <label for="edit-pengarang-buku">Pengarang</label>
+              <input id="edit-pengarang-buku" name="author" type="text" placeholder="Nama pengarang" required />
+            </div>
+
+            <div class="form-field">
+              <label for="edit-penerbit-buku">Penerbit</label>
+              <input id="edit-penerbit-buku" name="publisher" type="text" placeholder="Nama penerbit" required />
+            </div>
+
+            <div class="form-field">
+              <label for="edit-harga-beli-buku">Harga Beli</label>
+              <input id="edit-harga-beli-buku" name="purchase_price" type="number" min="0" step="1000" required />
+            </div>
+
+            <div class="form-field">
+              <label for="edit-harga-jual-buku">Harga Jual</label>
+              <input id="edit-harga-jual-buku" name="price" type="number" min="0" step="1000" required />
+            </div>
+
+            <div class="form-field" style="grid-column: 1 / -1;">
+              <label for="edit-kategori-buku">Kategori</label>
+              <select id="edit-kategori-buku" name="category_id" required>
+                <option value="">Pilih kategori</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-actions" style="margin-top: 20px; display: flex; gap: 12px; justify-content: flex-end;">
+            <button type="submit" class="primary-btn">Update</button>
+            <button type="button" data-close-modal="edit" style="border: none; background: #e2e8f0; color: #0f172a; padding: 12px 18px; border-radius: 10px; font-weight: 700; cursor: pointer;">Batal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../backend/app.js"></script>
+    <script src="script.js"></script>
+    <script>lucide.createIcons();</script>
+  </body>
+</html>
